@@ -1,0 +1,29 @@
+{
+    "publications": [
+        {
+            "script_name": "telegram_publisher.py",
+            "days": ["понедельник"],
+            "time": "09:00"
+        },
+        {
+            "script_name": "medium_apartments_publisher.py",
+            "days": ["вторник"],
+            "time": "09:00"
+        },
+        {
+            "script_name": "price_changes_publisher.py",
+            "days": ["среда"],
+            "time": "09:00"
+        },
+        {
+            "script_name": "medium_telegram_publisher.py",
+            "days": ["четверг"],
+            "time": "09:00"
+        },
+        {
+            "script_name": "api_to_sql.py",
+            "days": ["понедельник", "вторник", "среда", "четверг", "пятница", "суббота", "воскресенье"],
+            "time": "08:00"
+        }
+    ]
+} 
