@@ -1,3 +1,29 @@
+# Игнорировать файлы конфигурации и секретов
+.env
+*.env*
+
+# Логи
+*.log
+
+# Временные файлы
+*.pyc
+__pycache__/
+*.tmp
+*.bak
+
+# Системные файлы
+.DS_Store
+Thumbs.db
+
+# Базы данных
+*.db
+
+# VSCode
+.vscode/
+
+# Jupyter
+.ipynb_checkpoints/
+
 # Файлы с переменными окружения
 .env
 
@@ -16,13 +42,4 @@ env/
 .venv/
 
 # Файл с PID процесса
-.scheduler.pid
-
-# Системные файлы
-.DS_Store
-Thumbs.db
-
-# Временные файлы
-*.swp
-*.swo
-*~ 
+.scheduler.pid 
