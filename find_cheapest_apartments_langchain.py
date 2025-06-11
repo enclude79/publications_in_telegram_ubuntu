@@ -222,10 +222,13 @@ def format_apartments_report(df):
     if df.empty:
         return "Не найдено квартир, соответствующих заданным критериям."
     output = "Три самых дешевых квартиры (площадь до 40 кв.м.) в каждой локации:\n\n"
+    # Фильтруем по площади
+    df = df[df['area'] <= 40]
     for location, group in df.groupby('location'):
         output += f"Локация: {location}\n"
         output += "-" * 30 + "\n"
-        for i, (_, row) in enumerate(group.sort_values('price').iterrows(), 1):
+        # Берём только 3 самых дешёвых
+        for i, (_, row) in enumerate(group.sort_values('price').head(3).iterrows(), 1):
             output += f"{i}. {row['title']}\n"
             output += f"   ID: {row['id']}\n"
             output += f"   Цена: {float(row['price']):,.2f} AED\n"
@@ -247,7 +250,7 @@ async def send_to_telegram(text):
     async with aiohttp.ClientSession(connector=connector) as session:
         for i, chunk in enumerate(chunks):
             if i == 0:
-                chunk = f"📊 Анализ квартир до 40 кв.м. - {datetime.now().strftime('%d.%m.%Y %H:%M')}\n\n" + chunk
+                chunk = f"📊 Анализ квартир до 40 кв.m. - {datetime.now().strftime('%d.%m.%Y %H:%M')}\n\n" + chunk
             if i == len(chunks) - 1:
                 chunk = chunk + "\n\n#недвижимость #анализ #инвестиции"
             try:
