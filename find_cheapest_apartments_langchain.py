@@ -257,13 +257,12 @@ async def send_to_telegram(text):
                     else:
                         error_text = await response.text()
                         logger.error(f"Ошибка при отправке части {i+1}/{len(chunks)}: {error_text}")
-                        # Сохраняем проблемный чанк в файл для диагностики
                         error_file = f"error_chunk_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{i}.txt"
                         with open(error_file, 'w', encoding='utf-8') as f:
                             f.write(chunk)
                         logger.info(f"Проблемный чанк сохранен в файл: {error_file}")
                 await asyncio.sleep(1)
-        except Exception as e:
+            except Exception as e:
                 logger.error(f"Ошибка при отправке части {i+1}/{len(chunks)}: {e}")
         logger.info(f"Успешно отправлено {len(chunks)} частей сообщения")
 
