@@ -453,9 +453,6 @@ class PropertyAnalyzer:
         try:
             conn = psycopg2.connect(**DB_PARAMS)
             cursor = conn.cursor()
-            
-            # Модифицированный запрос: используем COALESCE чтобы обеспечить непустое значение neighborhood
-            # Если извлечение через CASE не удаётся, используем 'Unknown' или часть location
             query = """
             WITH LocationData AS (
                 SELECT 
@@ -466,16 +463,13 @@ class PropertyAnalyzer:
                     area,
                     location,
                     property_url,
-                    COALESCE(
-                        CASE
-                            WHEN location LIKE '%neighbourhood%'
-                            THEN substring(location FROM '"type": "neighbourhood".*?"name": "([^"]+)"')
-                            WHEN location NOT LIKE '%neighbourhood%' AND location LIKE '%"level": 2%' 
-                            THEN substring(location FROM '"level": 2.*?"name": "([^"]+)"')
-                            ELSE substring(location FROM '"level": 1.*?"name": "([^"]+)"')
-                        END,
-                        'Unknown'  -- Использовать 'Unknown', если не удалось извлечь neighborhood
-                    ) AS neighborhood
+                    CASE 
+                        WHEN location LIKE '%neighbourhood%' 
+                        THEN substring(location FROM '"type": "neighbourhood".*?"name": "([^"]+)"')
+                        WHEN location NOT LIKE '%neighbourhood%' AND location LIKE '%"level": 2%' 
+                        THEN substring(location FROM '"level": 2.*?"name": "([^"]+)"')
+                        ELSE substring(location FROM '"level": 1.*?"name": "([^"]+)"')
+                    END AS neighborhood
                 FROM bayut_properties
                 WHERE area <= 40
             ),
@@ -484,7 +478,7 @@ class PropertyAnalyzer:
                     id, title, price, rooms, area, neighborhood, property_url,
                     ROW_NUMBER() OVER (PARTITION BY neighborhood ORDER BY price ASC) as rank
                 FROM LocationData
-                -- Удаляем WHERE neighborhood IS NOT NULL, так как теперь всегда будет не NULL
+                WHERE neighborhood IS NOT NULL
             )
             SELECT id, title, price, rooms, area, neighborhood, property_url
             FROM RankedProperties
