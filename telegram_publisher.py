@@ -11,7 +11,7 @@ import html
 from datetime import datetime
 from dotenv import load_dotenv
 import aiohttp
-from find_cheapest_apartments_langchain import find_cheapest_apartments
+from find_cheapest_apartments import find_cheapest_apartments
 
 # Загрузка переменных окружения
 load_dotenv()
